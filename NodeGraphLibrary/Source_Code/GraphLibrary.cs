@@ -32,7 +32,7 @@
         {
             string simplifiedName = vertexName.Replace(" ", "").ToLower();
 
-            int index = GetEmptyArrayIndex(vertexes);
+            int index = GetArrayEmptyIndex(vertexes);
 
             if (index != -1 && index >= 0)
             {
@@ -87,6 +87,7 @@
         }
         #endregion
 
+        //MAYBE ADD THINGS HERE
         #region UTILITIES
         /// <summary>
         /// Call to check if there are any null spaces in the vertexes array
@@ -139,11 +140,12 @@
         }
 
         /// <summary>
+        /// <para>INTERNAL USE ONLY</para>
         /// Call to find the first null space in the given array.
         /// </summary>
         /// <returns>The position of the empty space.
         /// <para>-1 if no empty space was found.</para></returns>
-        static int GetEmptyArrayIndex(string[] arrayToCheck)
+        static int GetArrayEmptyIndex(string[] arrayToCheck)
         {
             for (int i = 0; i < arrayToCheck.Length; i++)
             {
@@ -157,11 +159,12 @@
         }
 
         /// <summary>
+        /// <para>INTERNAL USE ONLY</para>
         /// Call to find the first null space in the 1st dimension of the given array.
         /// </summary>
         /// <returns>The position of the empty space
         /// <para>-1 if no empty space was found</para></returns>
-        static int GetEmptyArrayIndex(string[,] arrayToCheck)
+        static int GetArrayEmptyIndex(string[,] arrayToCheck)
         {
             for (int i = 0; i < arrayToCheck.GetLength(0); i++)
             {

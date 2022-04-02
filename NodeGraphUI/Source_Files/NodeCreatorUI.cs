@@ -13,7 +13,7 @@ namespace NodeGraphUI
         /// <summary>
         /// Execute the program
         /// </summary>
-        public void Execute()
+        void Execute()
         {
             string answer = "";
             int result;
