@@ -20,7 +20,6 @@
             return vertexLinks;
         }
 
-        //COMPLETED
         #region NODE_CREATION
         /// <summary>
         /// Call to create a new vertex with the given name to the next empty array position
@@ -47,48 +46,68 @@
         }
         #endregion
 
-        //WIP
         #region NODE_CONNECTING
-        public static void TryCreateVertexEdge(string vertexName, string edgeName)
+        /// <summary>
+        /// Call to create a vertex between vertexNameA and vertexNameB.
+        /// </summary>
+        /// <returns>A string "Connected x with y"</returns>
+        public static string CreateVertexEdge(string vertexNameA, string vertexNameB)
         {
-            //Validate that both names are present in the vertex array
-            if (SearchVertexNameExistance(vertexName) && SearchVertexNameExistance(edgeName))
+            string returnSentence = "";
+
+            //Search for an empty space in the vertexes array
+            for (int i = 0; i < vertexLinks.GetLength(0); i++)
             {
-                //Check if the connection already exists
-                for (int i = 0; i < vertexLinks.GetLength(0); i++)
+                //If the i position is empty - then both positions are empty...
+                if (vertexLinks[i, 0] == null)
                 {
-                    if ((vertexLinks[i, 0] == vertexName && vertexLinks[i, 1] == edgeName)
-                        || (vertexLinks[i, 0] == edgeName && vertexLinks[i, 1] == vertexName))
-                    {
-                        //PrintColoredMessage(ConsoleColor.Red, "Connection already exists!");
-                    }
+                    //...set the new connection entry
+                    vertexLinks[i, 0] = vertexNameA;
+                    vertexLinks[i, 1] = vertexNameB;
+
+                    //PrintColoredMessage(ConsoleColor.Green, $"Connected {vertexName} with {edgeName}");
+                    returnSentence = $"Connected {vertexNameA} with {vertexNameB}";
+                    return returnSentence;
                 }
-
-                /*//Search for an empty space in the vertexes array
-                for (int i = 0; i < vertexLinks.GetLength(0); i++)
-                {
-                    //If the i position is empty - then both positions are empty...
-                    if (vertexLinks[i, 0] == null)
-                    {
-                        //...set the new connection entry
-                        vertexLinks[i, 0] = vertexName;
-                        vertexLinks[i, 1] = edgeName;
-
-                        //PrintColoredMessage(ConsoleColor.Green, $"Connected {vertexName} with {edgeName}");
-                        returnSentence = $"Connected {vertexName} with {edgeName}";
-                        return returnSentence;
-                    }
-                    else
-                    {
-                        returnSentence = ""
-                    }
-                }*/
             }
+
+            return $"Could not connect {vertexNameA} with {vertexNameB}";
         }
         #endregion
 
-        //MAYBE ADD THINGS HERE
+        #region VERTEX_DELETION
+        /// <summary>
+        /// Call to cycle through the given array and set BOTH entries of the given name 
+        /// inside the array to null
+        /// </summary>
+        /// <param name="name">The name to delete.</param>
+        /// <param name="edgesArray">The array to search for the name in.</param>
+        /// <returns>A string containing the deleted connections.</returns>
+        public static string StartEdgeDeletionSequence(string name, string[,] edgesArray)
+        {
+            string deletionSentence = "";
+
+            for (int i = 0; i < edgesArray.GetLength(0); i++)
+            {
+                //If the current index is null then continue to the next one
+                if (edgesArray[i, 0] == null) continue;
+
+                //If the i index matches the given name then delete both array entries
+                if (edgesArray[i, 0] == name || edgesArray[i, 1] == name)
+                {
+                    deletionSentence += $"Deleted connection {edgesArray[i, 0]}-{edgesArray[i, 1]} " +
+                                            $"from the connection list.\n";
+
+                    DeleteVertexFromArray(edgesArray, i);
+                }
+            }
+
+            return deletionSentence;
+        }
+        #endregion
+
         #region UTILITIES
+        //FULLNESS CHECK
         /// <summary>
         /// Call to check if there are any null spaces in the vertexes array
         /// </summary>
@@ -119,6 +138,7 @@
             return true;
         }
 
+        //VERTEX EXISTANCE and CONNECTION CHECK
         /// <summary>
         /// Call to search the vertexes array for the given name
         /// </summary>
@@ -139,6 +159,26 @@
             return false;
         }
 
+        /// <summary>
+        /// Call to compare the vertex and edge linking to the edges array.
+        /// </summary>
+        /// <returns>True is the linking DOES exist,
+        /// <para>False otherwise.</para></returns>
+        public static bool CompareVertexEdge(string vertexName, string edgeName)
+        {
+            for (int i = 0; i < vertexLinks.GetLength(0); i++)
+            {
+                if ((vertexLinks[i, 0] == vertexName && vertexLinks[i, 1] == edgeName)
+                    || (vertexLinks[i, 0] == edgeName && vertexLinks[i, 1] == vertexName))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        //ARRAY EMPTY INDEX CHECK
         /// <summary>
         /// <para>INTERNAL USE ONLY</para>
         /// Call to find the first null space in the given array.
@@ -177,34 +217,7 @@
             return -1;
         }
 
-        /// <summary>
-        /// Call to cycle through the given array and set BOTH entries of the given name to null
-        /// </summary>
-        /// <param name="name">The name to delete.</param>
-        /// <param name="edgesArray">The array to search for the name in.</param>
-        /// <returns>A string containing the deleted connections.</returns>
-        public static string SearchEdgeNameAndDelete(string name, string[,] edgesArray)
-        {
-            string deletionSentence = "";
-
-            for (int i = 0; i < edgesArray.GetLength(0); i++)
-            {
-                //If the current index is null then continue to the next one
-                if (edgesArray[i, 0] == null) continue;
-
-                //If the i index matches the given name then delete both array entries
-                if (edgesArray[i, 0] == name || edgesArray[i, 1] == name)
-                {
-                    DeleteVertexFromArray(edgesArray, i);
-
-                    deletionSentence += $"Deleted connection {edgesArray[i, 0]}-{edgesArray[i, 1]} " +
-                        $"from the connection list. \n";
-                }
-            }
-
-            return deletionSentence;
-        }
-
+        //DELETION METHODS
         /// <summary>
         /// Call to set the given index inside the given array to NULL
         /// </summary>

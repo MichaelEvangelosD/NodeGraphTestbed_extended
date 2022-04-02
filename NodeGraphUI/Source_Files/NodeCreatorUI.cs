@@ -32,6 +32,10 @@ namespace NodeGraphUI
                     //...and check if it is a valid choice
                     SwitchOnAnswer(result);
                 }
+                else
+                {
+                    PrintColoredMessage(ConsoleColor.Red, "Please select a valid option.");
+                }
             }
         }
 
@@ -87,13 +91,13 @@ namespace NodeGraphUI
                 case 0: //Terminate program
                     Environment.Exit(1);
                     break;
-                default: //When none of the above is selected
-                    PrintColoredMessage(ConsoleColor.Red, "Please select a valid option.");
+                default:
+                    Console.WriteLine("If you're seeing this message then the programmer " +
+                        "who made this is an idiot...");
                     break;
             }
         }
 
-        //COMPLETED
         #region NODE_CREATION
         /// <summary>
         /// Call to ask the user to provide a new node name and check if it exists inside the nodes array.
@@ -136,7 +140,6 @@ namespace NodeGraphUI
         }
         #endregion
 
-        //WIP
         #region NODE_CONNECTING
         void AskVertexLinkNames()
         {
@@ -147,7 +150,7 @@ namespace NodeGraphUI
                 return;
             }
 
-            string vertexName, edgeName;
+            string vertexName = "", edgeName = "";
 
             Console.WriteLine("Connect which station ?");
             vertexName = Console.ReadLine();
@@ -155,12 +158,36 @@ namespace NodeGraphUI
             Console.WriteLine($"Connect {vertexName} to ...?");
             edgeName = Console.ReadLine();
 
-            PrintColoredMessage(ConsoleColor.Red, "NODE_CONNECTING is WIP");
-            //GraphLibrary.TryCreateVertexEdge(vertexName, edgeName);
+            //Check if any given string is EMPTY or does not exist
+            if (String.Empty == vertexName.Replace(" ", "")
+                || !GraphLibrary.SearchVertexNameExistance(vertexName))
+            {
+                PrintColoredMessage(ConsoleColor.Red, "Station name is empty or does not exist!");
+                return;
+            }
+
+            if (String.Empty == edgeName.Replace(" ", "")
+                || !GraphLibrary.SearchVertexNameExistance(edgeName))
+            {
+                PrintColoredMessage(ConsoleColor.Red, "Connection name is empty or does not exist!");
+                return;
+            }
+
+            //Check if the connection already exists
+            if (GraphLibrary.CompareVertexEdge(vertexName, edgeName))
+            {
+                PrintColoredMessage(ConsoleColor.Cyan, "Connection already exists.");
+                return;
+            }
+
+            //Create the actuall vertex connection
+            string creationStr = GraphLibrary.CreateVertexEdge(vertexName, edgeName);
+
+            //Print a user info
+            PrintColoredMessage(ConsoleColor.Green, creationStr);
         }
         #endregion
 
-        //COMPLETED
         #region NODE_PRINTING
         /// <summary>
         /// Call to write all the contents of the vertexes array into the console
@@ -191,7 +218,6 @@ namespace NodeGraphUI
         }
         #endregion
 
-        //COMPLETED
         #region NODE_DELETION
         /// <summary>
         /// Call to display the nodes array and prompt the user which one to delete.
@@ -226,7 +252,7 @@ namespace NodeGraphUI
                 //Nullify the given index position inside the vertexes array
                 GraphLibrary.DeleteVertexFromArray(GraphLibrary.GetVertexArray(), parsedAnswer);
 
-                deletedEdgesInfo = GraphLibrary.SearchEdgeNameAndDelete(cachedVertexName, GraphLibrary.GetEdgesArray());
+                deletedEdgesInfo = GraphLibrary.StartEdgeDeletionSequence(cachedVertexName, GraphLibrary.GetEdgesArray());
 
                 PrintColoredMessage(ConsoleColor.Red, deletedEdgesInfo);
 
