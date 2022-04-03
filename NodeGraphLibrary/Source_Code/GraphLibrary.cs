@@ -1,4 +1,6 @@
-﻿namespace NodeGraphLibrary
+﻿using System.Text;
+
+namespace NodeGraphLibrary
 {
     /// <summary>
     /// A class library containing all the necessary methods to manage an undirected graph - uses arrays.
@@ -85,7 +87,7 @@
         /// <returns>A string containing the deleted connections.</returns>
         public static string StartEdgeDeletionSequence(string name, string[,] edgesArray)
         {
-            string deletionSentence = "";
+            var tempSB = new StringBuilder();
 
             for (int i = 0; i < edgesArray.GetLength(0); i++)
             {
@@ -95,14 +97,16 @@
                 //If the i index matches the given name then delete both array entries
                 if (edgesArray[i, 0] == name || edgesArray[i, 1] == name)
                 {
-                    deletionSentence += $"Deleted connection {edgesArray[i, 0]}-{edgesArray[i, 1]} " +
-                                            $"from the connection list.\n";
+                    /*deletionSentence += $"Deleted connection {edgesArray[i, 0]}-{edgesArray[i, 1]} " +
+                                            $"from the connection list.\n";*/
+                    tempSB.AppendLine($"Deleted connection {edgesArray[i, 0]}-{edgesArray[i, 1]} " +
+                                            $"from the connection list.\n");
 
                     DeleteVertexFromArray(edgesArray, i);
                 }
             }
 
-            return deletionSentence;
+            return tempSB.ToString();
         }
         #endregion
 
