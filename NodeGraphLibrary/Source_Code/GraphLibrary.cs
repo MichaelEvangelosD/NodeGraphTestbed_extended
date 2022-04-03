@@ -55,8 +55,6 @@ namespace NodeGraphLibrary
         /// <returns>A string "Connected x with y"</returns>
         public static string CreateVertexEdge(string vertexNameA, string vertexNameB)
         {
-            string returnSentence = "";
-
             //Search for an empty space in the vertexes array
             for (int i = 0; i < vertexLinks.GetLength(0); i++)
             {
@@ -67,8 +65,7 @@ namespace NodeGraphLibrary
                     vertexLinks[i, 0] = vertexNameA;
                     vertexLinks[i, 1] = vertexNameB;
 
-                    //PrintColoredMessage(ConsoleColor.Green, $"Connected {vertexName} with {edgeName}");
-                    returnSentence = $"Connected {vertexNameA} with {vertexNameB}";
+                    string returnSentence = $"Connected {vertexNameA} with {vertexNameB}";
                     return returnSentence;
                 }
             }
@@ -87,7 +84,7 @@ namespace NodeGraphLibrary
         /// <returns>A string containing the deleted connections.</returns>
         public static string StartEdgeDeletionSequence(string name, string[,] edgesArray)
         {
-            var tempSB = new StringBuilder();
+            StringBuilder tempSB = new StringBuilder();
 
             for (int i = 0; i < edgesArray.GetLength(0); i++)
             {
@@ -97,10 +94,7 @@ namespace NodeGraphLibrary
                 //If the i index matches the given name then delete both array entries
                 if (edgesArray[i, 0] == name || edgesArray[i, 1] == name)
                 {
-                    /*deletionSentence += $"Deleted connection {edgesArray[i, 0]}-{edgesArray[i, 1]} " +
-                                            $"from the connection list.\n";*/
-                    tempSB.AppendLine($"Deleted connection {edgesArray[i, 0]}-{edgesArray[i, 1]} " +
-                                            $"from the connection list.\n");
+                    tempSB.AppendLine($"Deleted connection {edgesArray[i, 0]}-{edgesArray[i, 1]} from the connection list.\n");
 
                     DeleteVertexFromArray(edgesArray, i);
                 }
